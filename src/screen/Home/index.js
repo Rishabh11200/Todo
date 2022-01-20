@@ -1,5 +1,12 @@
 import React, {useEffect, useState} from 'react';
-import {View, FlatList, Text, Pressable, TouchableOpacity} from 'react-native';
+import {
+  View,
+  FlatList,
+  Text,
+  Pressable,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import {useSelector} from 'react-redux';
 
@@ -62,7 +69,19 @@ const Home = ({navigation}) => {
     reloadData();
   };
   const deleteAllTodos = () => {
-    deleteAll(name);
+    Alert.alert('Really?', 'want to delete all todos...', [
+      {
+        text: 'No',
+        style: 'cancel',
+      },
+      {
+        text: 'Yes',
+        onPress: () => {
+          deleteAll(name);
+          reloadData();
+        },
+      },
+    ]);
   };
   navigateToEdit = item => {
     navigation.navigate('Edit', {item: JSON.stringify(item)});
