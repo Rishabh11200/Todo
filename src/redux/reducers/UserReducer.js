@@ -13,16 +13,12 @@ const initialState = {
 export const UserReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_USER:
-      let res = insertSingleUser(action.payload);
-      if (res === 'done') {
-        return {
-          ...state,
-          name: action.payload,
-          todo: getAllTodosWithUser(action.payload),
-        };
-      } else {
-        return 'not';
-      }
+      insertSingleUser(action.payload);
+      return {
+        ...state,
+        name: action.payload,
+        todo: getAllTodosWithUser(action.payload),
+      };
 
     case ADD_TODO:
       insertTodoItem(state.name, action.payload);

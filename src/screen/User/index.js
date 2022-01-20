@@ -6,8 +6,8 @@ import ScreenDetails from '../../constants/ScreenDetails';
 import {Color} from '../../constants/Color';
 import {styles} from './styles';
 
-import {useDispatch} from 'react-redux';
-import {addUser} from '../../redux/actions';
+import {useDispatch, useSelector} from 'react-redux';
+import {addUser, getTodo} from '../../redux/actions';
 
 const User = ({navigation}) => {
   const screen = ScreenDetails();
@@ -16,6 +16,7 @@ const User = ({navigation}) => {
   const onSubmit = () => {
     if (text != '') {
       let res = dispatch(addUser(text));
+
       if (res != 'not') {
         navigation.navigate('home', {
           user: text,

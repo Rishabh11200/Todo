@@ -1,26 +1,43 @@
 import React, {useState} from 'react';
-import {View, KeyboardAvoidingView, Pressable, Text, Alert} from 'react-native';
+import {
+  View,
+  KeyboardAvoidingView,
+  TouchableOpacity,
+  Pressable,
+  Text,
+  Alert,
+} from 'react-native';
 import {TextInput, Button} from 'react-native-paper';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {useDispatch, useSelector} from 'react-redux';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import {useNavigation} from '@react-navigation/native';
 
 import {styles} from './styles';
 import {Color} from '../../constants/Color';
 import ScreenDetails from '../../constants/ScreenDetails';
-import {addTodo} from '../../redux/actions';
+import {updateItem} from '../../Realm';
 
-const AddTodo = ({navigation}) => {
+const EditTodo = route => {
+  const data = route.route.params.item;
+  const item = JSON.parse(data);
+  const navigation = useNavigation();
+
   const screen = ScreenDetails;
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [startDate, setStartDate] = useState(new Date());
-  const [startText, setStartText] = useState('Select start date');
+  let dDate = item.dueDate.split('/');
+  let date = item.startDate.split('/');
+  const [title, setTitle] = useState(item.title);
+  const [description, setDescription] = useState(item.description);
+  const [startDate, setStartDate] = useState(
+    new Date(date[2], date[1] - 1, date[0]),
+  );
+  const [startText, setStartText] = useState(item.startDate);
   const [openStart, setOpenStart] = useState(false);
-  const [dueDate, setdueDate] = useState(new Date());
-  const [dueText, setdueText] = useState('Select due date');
+  const [dueDate, setdueDate] = useState(
+    new Date(dDate[2], dDate[1] - 1, dDate[0]),
+  );
+  const [dueText, setdueText] = useState(item.dueDate);
   const [opendue, setOpendue] = useState(false);
-  const dispatch = useDispatch();
-  const username = useSelector(state => state.UserReducer.name);
+  const [status, setStatus] = useState(item.status);
 
   const onChangeStartDate = (event, selected) => {
     const current = selected || startDate;
@@ -60,6 +77,7 @@ const AddTodo = ({navigation}) => {
       temp.getMinutes();
     return edited;
   }
+
   const onSubmit = () => {
     if (
       title != '' &&
@@ -69,16 +87,14 @@ const AddTodo = ({navigation}) => {
     ) {
       if (startText <= dueText) {
         const Item = {
-          id: title + String(Date()),
           title: title,
           description: description,
           startDate: startText,
           dueDate: dueText,
-          createdDate: justNow(),
           updatedDate: justNow(),
-          status: false,
+          status: status,
         };
-        dispatch(addTodo(Item));
+        updateItem(item.id, Item);
         navigation.pop();
       } else {
         Alert.alert('Please Enter valid date');
@@ -132,7 +148,7 @@ const AddTodo = ({navigation}) => {
                 </Button>
                 {openStart && (
                   <DateTimePicker
-                    minimumDate={new Date()}
+                    minimumDate={startDate}
                     value={startDate}
                     mode={'date'}
                     is24Hour={true}
@@ -163,6 +179,28 @@ const AddTodo = ({navigation}) => {
                   />
                 )}
               </View>
+              <View style={styles.row}>
+                <Text style={styles.simpleText}>Status:</Text>
+                {status ? (
+                  <TouchableOpacity onPress={() => setStatus(false)}>
+                    <Icon
+                      name="check-circle"
+                      size={24}
+                      color={Color.darkGreen}
+                      style={styles.icon}
+                    />
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity onPress={() => setStatus(true)}>
+                    <Icon
+                      name="cancel"
+                      size={24}
+                      color={Color.red}
+                      style={styles.icon}
+                    />
+                  </TouchableOpacity>
+                )}
+              </View>
               <Pressable
                 onPress={() => {
                   onSubmit();
@@ -181,4 +219,4 @@ const AddTodo = ({navigation}) => {
   );
 };
 
-export default AddTodo;
+export default EditTodo;

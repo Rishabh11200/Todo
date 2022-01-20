@@ -7,6 +7,8 @@ const Stack = createNativeStackNavigator();
 import User from '../screen/User';
 import Home from '../screen/Home';
 import AddTodo from '../screen/AddTodo';
+import EditTodo from '../screen/EditTodo';
+import ViewTodo from '../screen/ViewTodo';
 
 const AllPageNavigation = () => {
   return (
@@ -28,6 +30,16 @@ const AllPageNavigation = () => {
           name="Add"
           component={AddTodo}
           options={{title: 'Add todo'}}
+        />
+        <Stack.Screen
+          name="Edit"
+          component={EditTodo}
+          options={{title: 'Edit todo'}}
+        />
+        <Stack.Screen
+          name="View"
+          component={ViewTodo}
+          options={{tile: 'View'}}
         />
       </Stack.Navigator>
     </NavigationContainer>

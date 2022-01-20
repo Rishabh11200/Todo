@@ -5,4 +5,7 @@ export const Color = {
   blue: '#0392FF',
   shadeBlue: '#152D54',
   cyan: '#007172',
+  red: 'red',
+  green: '#d1ffbd',
+  darkGreen: 'green',
 };
